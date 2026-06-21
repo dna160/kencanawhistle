@@ -9,6 +9,7 @@
  * e.g. "report.viewed", "status.changed", "recusal.applied", "user.invited"
  */
 import { db } from "@/lib/db/client";
+import type { Prisma } from "@prisma/client";
 
 export type AuditAction =
   | "report.submitted"
@@ -30,7 +31,7 @@ interface LogEventParams {
   action: AuditAction;
   actorReviewerId?: string;
   reportId?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonObject;
 }
 
 /**
@@ -50,7 +51,7 @@ export async function logEvent({
         action,
         actorReviewerId: actorReviewerId ?? null,
         reportId: reportId ?? null,
-        metadataJson: metadata ?? {},
+        metadataJson: (metadata ?? {}) as Prisma.InputJsonValue,
       },
     });
   } catch (err) {

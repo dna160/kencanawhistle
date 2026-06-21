@@ -38,11 +38,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const reviewer = await db.reviewer.findUnique({ where: { email } });
         if (!reviewer || !reviewer.isActive) return null;
 
-        // Password check (stored as argon2 hash in reviewer.totpSecretEnc is wrong —
-        // password hash is stored separately; see reviewer.passwordHash below)
-        // NOTE: passwordHash field is added in the migration below
-        // @ts-expect-error — field added via migration, not yet in types
-        const passwordHash: string | null = reviewer.passwordHash;
+        // Password check
+        const passwordHash = reviewer.passwordHash;
         if (!passwordHash) return null;
 
         const passwordOk = await argon2.verify(passwordHash, password);

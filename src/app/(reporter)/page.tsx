@@ -205,17 +205,34 @@ export default function ReportPage() {
             ))}
           </select>
 
+          {/* Show description hint for selected category */}
+          {selectedCategory && selectedCategory !== "other" && (
+            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+              {/* Category descriptions are stored in i18n but rendered from a lookup */}
+              {({
+                financial_fraud: "Misappropriation of funds, false invoicing, asset theft, expense fraud, financial misreporting",
+                corruption_conflict: "Bribery, kickbacks, undisclosed personal interests, undue influence, bid-rigging",
+                health_safety_env: "Unsafe working conditions, unreported accidents, environmental violations, hazardous material breaches",
+                workplace_conduct: "Harassment, discrimination, bullying, abuse of authority, retaliation against employees",
+                labor_human_rights: "Forced/child labor, wage theft, illegal working hours, freedom-of-association violations",
+                legal_regulatory: "Regulatory breaches, illegal practices, permit violations, sanctions non-compliance",
+                data_it_confidentiality: "Unauthorized data access, privacy breaches, trade-secret misuse, IT security incidents",
+                records_governance: "Document falsification, audit manipulation, suppression of evidence, misleading disclosures",
+              } as Record<string, string>)[selectedCategory]}
+            </p>
+          )}
+
           {/* "Other" — reveal custom description field */}
           {selectedCategory === "other" && (
             <div className="mt-3">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Please specify *
+                {t("categoryOtherLabel")} *
               </label>
               <input
                 type="text"
                 name="categoryOther"
                 required
-                placeholder="Describe the type of concern…"
+                placeholder={t("categoryOtherPlaceholder")}
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
               />
             </div>

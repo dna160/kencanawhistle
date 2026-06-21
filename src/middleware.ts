@@ -19,6 +19,7 @@ const PUBLIC_PREFIXES = [
   "/api/categories",
   "/api/health",
   "/api/auth",
+  "/api/setup",   // one-time setup endpoint — protected by SETUP_SECRET header
   "/_next",
   "/favicon.ico",
 ];

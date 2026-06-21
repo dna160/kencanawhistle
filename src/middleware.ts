@@ -1,35 +1,56 @@
 /**
  * Next.js middleware — protect all /cases, /case, and /admin routes.
  * Reporter routes (/ and /follow-up) are public.
+ *
+ * Uses getToken() from next-auth/jwt (Edge-compatible) rather than importing
+ * the full auth config, which pulls in argon2 → node:crypto and breaks the
+ * Edge runtime used by middleware.
  */
-import { auth } from "@/lib/auth/config";
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+
+// Paths that require NO authentication
+const PUBLIC_PREFIXES = [
+  "/",
+  "/follow-up",
+  "/login",
+  "/api/reports",
+  "/api/categories",
+  "/api/health",
+  "/api/auth",
+  "/_next",
+  "/favicon.ico",
+];
+
+function isPublic(pathname: string): boolean {
+  return PUBLIC_PREFIXES.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Public paths — no auth required
-  const publicPaths = ["/", "/follow-up", "/login", "/api/reports", "/api/categories", "/api/health"];
-  if (publicPaths.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
-    return NextResponse.next();
-  }
+  if (isPublic(pathname)) return NextResponse.next();
 
-  // All other paths require authentication
-  const session = await auth();
-  if (!session?.user) {
+  // Verify JWT session (Edge-safe — no argon2, no node:crypto)
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  });
+
+  if (!token) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Admin RBAC: /admin routes are for admin role only
-  if (pathname.startsWith("/admin") && session.user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  // /api/admin routes: admin only
-  if (pathname.startsWith("/api/admin") && session.user.role !== "admin") {
+  // Admin role check: /admin and /api/admin routes are admin-only
+  if (
+    (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) &&
+    token.role !== "admin"
+  ) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -38,7 +59,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all except Next.js internals and static files
+    // Match everything except Next.js internals and static assets
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };

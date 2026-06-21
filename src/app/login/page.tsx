@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { loginAction } from "./actions";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [step, setStep] = useState<"credentials" | "totp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [totpCode, setTotpCode] = useState("");
@@ -19,24 +16,17 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        totpCode: totpCode || "",
-        redirect: false,
-      });
-
-      // next-auth v5: result is undefined on success, or { error } on failure
-      if (result && (result as { error?: string }).error) {
-        setError("Invalid credentials or 2FA code. Please try again.");
-      } else {
-        // Redirect to smart dashboard — it routes admin→/admin, others→/cases
-        router.push("/dashboard");  // /dashboard redirects to /admin or /cases by role
+      const result = await loginAction({ email, password, totpCode });
+      // If result has error, show it
+      if (result?.error) {
+        setError(result.error);
       }
-    } catch (err) {
-      // next-auth v5 may throw instead of returning error
-      console.error("signIn error:", err);
-      setError("Invalid credentials. Please try again.");
+      // On success, loginAction throws NEXT_REDIRECT which Next.js handles —
+      // the browser navigates to /dashboard automatically
+    } catch {
+      // NEXT_REDIRECT propagates as a thrown error in Server Actions —
+      // do NOT catch it here; re-throw so Next.js handles the navigation
+      throw new Error("redirect");
     } finally {
       setLoading(false);
     }
@@ -124,8 +114,6 @@ export default function LoginPage() {
         <p className="text-center text-xs text-gray-400 mt-6">
           Need access? Contact your system administrator.
         </p>
-
-        {/* Link back to public reporter form */}
         <p className="text-center text-xs text-gray-400 mt-2">
           <a href="/" className="underline">← Return to public report form</a>
         </p>

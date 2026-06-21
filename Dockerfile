@@ -37,6 +37,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Railway injects HOSTNAME=<container-id>; Next.js standalone binds to that
+# instead of 0.0.0.0, making healthchecks unreachable. Force all-interfaces.
+ENV HOSTNAME=0.0.0.0
 
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static

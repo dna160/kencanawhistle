@@ -22,17 +22,22 @@ export default function LoginPage() {
       const result = await signIn("credentials", {
         email,
         password,
-        totpCode,
+        totpCode: totpCode || "",
         redirect: false,
       });
 
-      if (result?.error) {
+      // next-auth v5: result is undefined on success, or { error } on failure
+      if (result && (result as { error?: string }).error) {
         setError("Invalid credentials or 2FA code. Please try again.");
       } else {
-        router.push("/cases");
+        // Redirect to smart dashboard — it routes admin→/admin, others→/cases
+        router.push("/dashboard");
+        router.refresh();
       }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
+    } catch (err) {
+      // next-auth v5 may throw instead of returning error
+      console.error("signIn error:", err);
+      setError("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
     }

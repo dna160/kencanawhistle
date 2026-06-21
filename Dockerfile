@@ -40,6 +40,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
+# public/ may be empty; copy it only if it exists in the build stage
 COPY --from=build /app/public ./public
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/prisma ./prisma

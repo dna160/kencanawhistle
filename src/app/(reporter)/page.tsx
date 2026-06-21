@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, FormEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { LocaleSwitcher } from "@/components/ui/LocaleSwitcher";
 import { clsx } from "clsx";
 
@@ -18,6 +18,11 @@ export default function ReportPage() {
   const tc = useTranslations("common");
   const te = useTranslations("errors");
   const tac = useTranslations("accessCode");
+  const locale = useLocale();
+
+  // Pick the right label column based on active locale
+  const catLabel = (c: { labelEn: string; labelId: string }) =>
+    locale === "id" ? c.labelId : c.labelEn;
 
   const [mode, setMode] = useState<"anonymous" | "named">("anonymous");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -201,23 +206,31 @@ export default function ReportPage() {
           >
             <option value="">{t("categoryPlaceholder")}</option>
             {categories.map((c) => (
-              <option key={c.key} value={c.key}>{c.labelEn}</option>
+              <option key={c.key} value={c.key}>{catLabel(c)}</option>
             ))}
           </select>
 
           {/* Show description hint for selected category */}
           {selectedCategory && selectedCategory !== "other" && (
             <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              {/* Category descriptions are stored in i18n but rendered from a lookup */}
-              {({
-                financial_fraud: "Misappropriation of funds, false invoicing, asset theft, expense fraud, financial misreporting",
-                corruption_conflict: "Bribery, kickbacks, undisclosed personal interests, undue influence, bid-rigging",
-                health_safety_env: "Unsafe working conditions, unreported accidents, environmental violations, hazardous material breaches",
-                workplace_conduct: "Harassment, discrimination, bullying, abuse of authority, retaliation against employees",
-                labor_human_rights: "Forced/child labor, wage theft, illegal working hours, freedom-of-association violations",
-                legal_regulatory: "Regulatory breaches, illegal practices, permit violations, sanctions non-compliance",
-                data_it_confidentiality: "Unauthorized data access, privacy breaches, trade-secret misuse, IT security incidents",
-                records_governance: "Document falsification, audit manipulation, suppression of evidence, misleading disclosures",
+              {(locale === "id" ? {
+                financial_fraud:        "Penyalahgunaan dana, faktur palsu, pencurian aset, penipuan biaya, pelaporan keuangan palsu",
+                corruption_conflict:    "Suap, kickback, kepentingan pribadi yang tidak diungkapkan, pengaruh tidak wajar, pengaturan penawaran",
+                health_safety_env:      "Kondisi kerja tidak aman, kecelakaan tidak dilaporkan, pelanggaran lingkungan, pelanggaran bahan berbahaya",
+                workplace_conduct:      "Pelecehan, diskriminasi, intimidasi, penyalahgunaan wewenang, pembalasan terhadap karyawan",
+                labor_human_rights:     "Kerja paksa/anak, pencurian upah, jam kerja ilegal, pelanggaran kebebasan berserikat",
+                legal_regulatory:       "Pelanggaran regulasi, praktik ilegal, pelanggaran izin, ketidakpatuhan sanksi",
+                data_it_confidentiality:"Akses data tidak sah, pelanggaran privasi, penyalahgunaan rahasia dagang, insiden keamanan IT",
+                records_governance:     "Pemalsuan dokumen, manipulasi audit, penghilangan bukti, pengungkapan yang menyesatkan",
+              } : {
+                financial_fraud:        "Misappropriation of funds, false invoicing, asset theft, expense fraud, financial misreporting",
+                corruption_conflict:    "Bribery, kickbacks, undisclosed personal interests, undue influence, bid-rigging",
+                health_safety_env:      "Unsafe working conditions, unreported accidents, environmental violations, hazardous material breaches",
+                workplace_conduct:      "Harassment, discrimination, bullying, abuse of authority, retaliation against employees",
+                labor_human_rights:     "Forced/child labor, wage theft, illegal working hours, freedom-of-association violations",
+                legal_regulatory:       "Regulatory breaches, illegal practices, permit violations, sanctions non-compliance",
+                data_it_confidentiality:"Unauthorized data access, privacy breaches, trade-secret misuse, IT security incidents",
+                records_governance:     "Document falsification, audit manipulation, suppression of evidence, misleading disclosures",
               } as Record<string, string>)[selectedCategory]}
             </p>
           )}

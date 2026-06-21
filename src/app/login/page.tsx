@@ -31,8 +31,7 @@ export default function LoginPage() {
         setError("Invalid credentials or 2FA code. Please try again.");
       } else {
         // Redirect to smart dashboard — it routes admin→/admin, others→/cases
-        router.push("/dashboard");
-        router.refresh();
+        router.push("/dashboard");  // /dashboard redirects to /admin or /cases by role
       }
     } catch (err) {
       // next-auth v5 may throw instead of returning error

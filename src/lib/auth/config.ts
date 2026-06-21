@@ -17,7 +17,8 @@ import type { ReviewerRole } from "@prisma/client";
 const credSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  totpCode: z.string().length(6),
+  // TOTP is optional on first login (not yet enrolled); required once enrolled
+  totpCode: z.string().optional().default(""),
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -46,16 +47,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!passwordOk) return null;
 
         // TOTP check
-        const { verifyTOTP } = await import("@/lib/auth/totp");
-        if (!reviewer.totpVerified || !reviewer.totpSecretEnc) return null;
-        const totpOk = await verifyTOTP(reviewer.totpSecretEnc, totpCode);
-        if (!totpOk) return null;
+        // If TOTP not yet enrolled: allow login so user can set it up on first access.
+        // If TOTP enrolled: code is mandatory.
+        if (reviewer.totpVerified && reviewer.totpSecretEnc) {
+          if (!totpCode) return null; // enrolled but no code provided
+          const { verifyTOTP } = await import("@/lib/auth/totp");
+          const totpOk = await verifyTOTP(reviewer.totpSecretEnc, totpCode);
+          if (!totpOk) return null;
+        }
 
         return {
           id: reviewer.id,
           email: reviewer.email,
           name: reviewer.displayName,
           role: reviewer.role as ReviewerRole,
+          totpVerified: reviewer.totpVerified,
         };
       },
     }),

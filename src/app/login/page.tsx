@@ -82,6 +82,9 @@ export default function LoginPage() {
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Authenticator code (2FA)
+              <span className="ml-2 text-xs font-normal text-gray-400">
+                — leave blank if not yet set up
+              </span>
             </label>
             <input
               type="text"
@@ -90,13 +93,12 @@ export default function LoginPage() {
               maxLength={6}
               value={totpCode}
               onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ""))}
-              required
               autoComplete="one-time-code"
-              placeholder="000000"
+              placeholder="000000 (optional on first login)"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base font-mono tracking-widest text-center text-xl"
             />
             <p className="text-xs text-gray-400 mt-1">
-              Enter the 6-digit code from your authenticator app.
+              First-time login: leave blank. You will be prompted to set up 2FA after signing in.
             </p>
           </div>
 

@@ -1,0 +1,155 @@
+{
+  "common": {
+    "appName": "Bicara",
+    "loading": "Memuat…",
+    "submit": "Kirim",
+    "cancel": "Batal",
+    "back": "Kembali",
+    "next": "Lanjut",
+    "close": "Tutup",
+    "save": "Simpan",
+    "yes": "Ya",
+    "no": "Tidak",
+    "anonymous": "Anonim",
+    "named": "Dengan nama (dengan persetujuan)"
+  },
+  "locale": {
+    "switch": "English",
+    "current": "Bahasa Indonesia"
+  },
+  "reporter": {
+    "headline": "Laporkan kekhawatiran Anda",
+    "subheadline": "Laporan Anda langsung diterima oleh Dewan Komisaris, terlepas dari manajemen.",
+    "modeLabel": "Bagaimana Anda ingin mengirim?",
+    "anonymousHint": "Identitas Anda tidak akan pernah dicatat. Anda akan menerima kode privat untuk menindaklanjuti.",
+    "namedHint": "Anda menyetujui identitas Anda dibagikan kepada Dewan untuk kasus ini.",
+    "consentLabel": "Saya menyetujui berbagi nama dan informasi kontak saya dengan Dewan Komisaris untuk keperluan penyelidikan laporan ini.",
+    "categoryLabel": "Kategori",
+    "categoryPlaceholder": "Pilih kategori",
+    "descriptionLabel": "Apa yang terjadi?",
+    "descriptionPlaceholder": "Jelaskan insiden ini sedetail mungkin. Jangan cantumkan nama atau informasi pribadi Anda jika ingin tetap anonim.",
+    "subjectLabel": "Siapa atau departemen mana yang terlibat? (opsional)",
+    "dateLabel": "Perkiraan tanggal / periode (opsional)",
+    "locationLabel": "Lokasi (opsional)",
+    "attachmentsLabel": "Lampiran (opsional)",
+    "attachmentsHint": "Foto, dokumen, atau bukti lainnya. Maksimal 10 MB per file. Metadata dihapus secara otomatis.",
+    "hrNote": "Catatan: Untuk keluhan HR atau tempat kerja biasa, gunakan saluran HR standar. Platform ini untuk pelanggaran serius, penipuan, dan masalah keselamatan.",
+    "commissionerFlag": "Apakah laporan ini menyangkut anggota Dewan Komisaris?",
+    "commissionerName": "Nama komisaris (opsional)",
+    "submitButton": "Kirim laporan",
+    "submitting": "Mengirim…"
+  },
+  "accessCode": {
+    "title": "Kode akses pribadi Anda",
+    "instruction": "Catat dan simpan kode ini dengan aman. Anda membutuhkannya untuk menindaklanjuti laporan Anda. Kode ini tidak akan ditampilkan lagi.",
+    "referenceLabel": "Referensi laporan Anda:",
+    "codeCopied": "Disalin!",
+    "copy": "Salin kode",
+    "continueButton": "Saya sudah menyimpan kode saya",
+    "followUpButton": "Tindak lanjut laporan",
+    "followUpTitle": "Periksa laporan Anda",
+    "followUpInstruction": "Masukkan kode akses pribadi Anda untuk melihat status laporan dan pesan.",
+    "codePlaceholder": "Masukkan kode akses Anda",
+    "checkButton": "Lihat laporan",
+    "checking": "Memeriksa…",
+    "invalidCode": "Kode tidak valid. Periksa kembali dan coba lagi.",
+    "codeExpired": "Kode ini telah digunakan terlalu banyak kali atau telah kedaluwarsa."
+  },
+  "status": {
+    "new": "Baru",
+    "acknowledged": "Diakui",
+    "under_review": "Sedang Ditinjau",
+    "action_taken": "Tindakan Diambil",
+    "closed": "Ditutup",
+    "escalated": "Dieskalasi"
+  },
+  "thread": {
+    "title": "Laporan Anda",
+    "statusLabel": "Status",
+    "yourMessage": "Kirim pesan",
+    "messagePlaceholder": "Tambahkan detail atau jawab pertanyaan dari peninaju…",
+    "sendButton": "Kirim",
+    "sending": "Mengirim…",
+    "reviewerLabel": "Peninjau",
+    "reporterLabel": "Anda",
+    "noMessages": "Belum ada pesan. Peninjau mungkin mengajukan pertanyaan lanjutan di sini."
+  },
+  "dashboard": {
+    "title": "Kasus",
+    "newCase": "Kasus baru",
+    "filters": {
+      "all": "Semua",
+      "open": "Terbuka",
+      "mine": "Ditugaskan ke saya"
+    },
+    "columns": {
+      "reference": "Referensi",
+      "category": "Kategori",
+      "status": "Status",
+      "created": "Dikirim",
+      "sla": "SLA"
+    },
+    "sla": {
+      "acknowledgeDue": "Akui sebelum",
+      "feedbackDue": "Umpan balik jatuh tempo",
+      "overdue": "Terlambat"
+    },
+    "noCase": "Tidak ada kasus yang cocok dengan filter Anda."
+  },
+  "case": {
+    "title": "Kasus",
+    "body": "Detail laporan",
+    "attachments": "Lampiran",
+    "internalNotes": "Catatan internal",
+    "addNote": "Tambah catatan",
+    "noteplaceholder": "Catatan internal hanya terlihat oleh peninjau.",
+    "thread": "Pesan pelapor",
+    "assignee": "Penugasan",
+    "recuse": "Menonaktifkan diri",
+    "recuseReason": "Alasan penonaktifan (opsional)",
+    "recuseConfirm": "Konfirmasi — Anda tidak akan melihat kasus ini lagi.",
+    "escalate": "Eskalasi ke pihak eksternal",
+    "escalateReason": "Alasan eskalasi",
+    "statusChange": "Ubah status"
+  },
+  "auth": {
+    "loginTitle": "Masuk",
+    "emailLabel": "Alamat email",
+    "passwordLabel": "Kata sandi",
+    "totpLabel": "Kode autentikator",
+    "totpHint": "Masukkan kode 6 digit dari aplikasi autentikator Anda.",
+    "signInButton": "Masuk",
+    "signingIn": "Masuk…",
+    "error": "Kredensial atau kode 2FA tidak valid.",
+    "setupTotp": "Siapkan autentikasi dua faktor",
+    "setupTotpInstruction": "Pindai kode QR ini dengan aplikasi autentikator, lalu masukkan kode 6 digit untuk konfirmasi.",
+    "verifyCode": "Verifikasi kode",
+    "totpSetupSuccess": "Autentikasi dua faktor kini aktif."
+  },
+  "admin": {
+    "title": "Administrasi",
+    "users": "Pengguna",
+    "inviteUser": "Undang pengguna",
+    "emailLabel": "Alamat email",
+    "nameLabel": "Nama tampilan",
+    "roleLabel": "Peran",
+    "roles": {
+      "commissioner": "Komisaris (Anggota Dewan)",
+      "admin": "Administrator",
+      "external": "Pihak eskalasi eksternal"
+    },
+    "sendInvite": "Kirim undangan",
+    "disable": "Nonaktifkan akun",
+    "categories": "Kategori",
+    "slaSettings": "Pengaturan SLA",
+    "quorumSettings": "Pengaturan kuorum"
+  },
+  "errors": {
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "forbidden": "Anda tidak memiliki izin untuk melihat ini.",
+    "notFound": "Tidak ditemukan.",
+    "tooManyRequests": "Terlalu banyak percobaan. Tunggu sebelum mencoba lagi.",
+    "fileTooLarge": "File terlalu besar (maksimal 10 MB).",
+    "fileTypeNotAllowed": "Jenis file tidak diizinkan."
+  }
+}

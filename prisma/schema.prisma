@@ -1,0 +1,263 @@
+// Whistleblow — Prisma schema
+// Section 9 of the PRD is the authoritative data model reference.
+// *_enc columns hold AES-256-GCM ciphertext when ENCRYPTION_KEY is set (field-level hardening).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enumerations
+// ─────────────────────────────────────────────
+
+enum ReviewerRole {
+  commissioner
+  admin
+  external
+}
+
+enum ReportStatus {
+  new
+  acknowledged
+  under_review
+  action_taken
+  closed
+  escalated
+}
+
+enum ReportChannel {
+  web
+  kiosk
+}
+
+enum MessageSender {
+  reporter
+  reviewer
+}
+
+// ─────────────────────────────────────────────
+// Reviewer accounts (Board members, admin, external parties)
+// ─────────────────────────────────────────────
+
+model Reviewer {
+  id             String       @id @default(cuid())
+  email          String       @unique
+  role           ReviewerRole
+  displayName    String
+  // Password hash (argon2id)
+  passwordHash   String?
+  // TOTP secret stored encrypted at rest
+  totpSecretEnc  String?
+  totpVerified   Boolean      @default(false)
+  isActive       Boolean      @default(false) // activated by admin via invite flow
+  createdAt      DateTime     @default(now())
+  disabledAt     DateTime?
+
+  // Relations
+  sessions       Session[]
+  reportNotes    ReportNote[]
+  reviewerMessages ReportMessage[]
+  recusals       Recusal[]
+  escalationsTo  Escalation[]   @relation("EscalationTarget")
+  auditLogs      AuditLog[]
+
+  @@map("reviewers")
+}
+
+// ─────────────────────────────────────────────
+// Sessions (reviewer auth sessions)
+// ─────────────────────────────────────────────
+
+model Session {
+  id          String    @id @default(cuid())
+  reviewerId  String
+  reviewer    Reviewer  @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  // IP logged ONLY for privileged sessions; hashed, not plaintext
+  ipHash      String?
+
+  @@map("sessions")
+}
+
+// ─────────────────────────────────────────────
+// Reports — the core entity
+// NO ip_address, NO device fields, by design.
+// ─────────────────────────────────────────────
+
+model Report {
+  id                     String        @id @default(cuid())
+  // Public-facing human-readable reference (non-sequential, 8-char alphanum)
+  referenceCode          String        @unique
+  categoryId             String
+  category               Category      @relation(fields: [categoryId], references: [id])
+  isAnonymous            Boolean       @default(true)
+  status                 ReportStatus  @default(new)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  channel                ReportChannel @default(web)
+  // Did reporter indicate a commissioner is involved?
+  subjectIsCommissioner  Boolean       @default(false)
+  // Named commissioner (only when subjectIsCommissioner=true); stored encrypted
+  namedSubjectEnc        String?
+  // Reporter identity — only stored when reporter consents to named mode
+  consentedIdentityEnc   String?
+  // Report body — stored encrypted
+  bodyEnc                String
+  // SLA timestamps
+  acknowledgedAt         DateTime?
+  closedAt               DateTime?
+
+  // Relations
+  accessCodes    AccessCode[]
+  messages       ReportMessage[]
+  notes          ReportNote[]
+  attachments    Attachment[]
+  recusals       Recusal[]
+  escalations    Escalation[]
+  auditLogs      AuditLog[]
+
+  @@map("reports")
+}
+
+// ─────────────────────────────────────────────
+// Access codes — one per report, hashed, never plaintext in DB
+// ─────────────────────────────────────────────
+
+model AccessCode {
+  id          String    @id @default(cuid())
+  reportId    String
+  report      Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  codeHash    String    @unique
+  createdAt   DateTime  @default(now())
+  lastUsedAt  DateTime?
+
+  @@map("access_codes")
+}
+
+// ─────────────────────────────────────────────
+// Messages — two-way anonymous thread
+// ─────────────────────────────────────────────
+
+model ReportMessage {
+  id                 String        @id @default(cuid())
+  reportId           String
+  report             Report        @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sender             MessageSender
+  // Encrypted body
+  bodyEnc            String
+  // Set only when sender = reviewer
+  authorReviewerId   String?
+  authorReviewer     Reviewer?     @relation(fields: [authorReviewerId], references: [id])
+  createdAt          DateTime      @default(now())
+
+  @@map("report_messages")
+}
+
+// ─────────────────────────────────────────────
+// Notes — reviewer-only internal notes (not visible to reporter)
+// ─────────────────────────────────────────────
+
+model ReportNote {
+  id               String    @id @default(cuid())
+  reportId         String
+  report           Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  authorReviewerId String
+  author           Reviewer  @relation(fields: [authorReviewerId], references: [id])
+  bodyEnc          String
+  createdAt        DateTime  @default(now())
+
+  @@map("report_notes")
+}
+
+// ─────────────────────────────────────────────
+// Attachments — uploaded files, EXIF/metadata stripped
+// ─────────────────────────────────────────────
+
+model Attachment {
+  id               String    @id @default(cuid())
+  reportId         String
+  report           Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  storageKey       String    // path in object storage / volume
+  filename         String    // original name (sanitized)
+  mime             String
+  sizeBytes        Int
+  metadataStripped Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+
+  @@map("attachments")
+}
+
+// ─────────────────────────────────────────────
+// Recusals — hides a report from a specific reviewer at query layer
+// ─────────────────────────────────────────────
+
+model Recusal {
+  id          String    @id @default(cuid())
+  reportId    String
+  report      Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reviewerId  String
+  reviewer    Reviewer  @relation(fields: [reviewerId], references: [id])
+  reason      String?
+  createdAt   DateTime  @default(now())
+
+  @@unique([reportId, reviewerId])
+  @@map("recusals")
+}
+
+// ─────────────────────────────────────────────
+// Escalations — route to external party when board is conflicted
+// ─────────────────────────────────────────────
+
+model Escalation {
+  id              String    @id @default(cuid())
+  reportId        String
+  report          Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  toReviewerId    String
+  toReviewer      Reviewer  @relation("EscalationTarget", fields: [toReviewerId], references: [id])
+  reason          String?
+  createdAt       DateTime  @default(now())
+
+  @@map("escalations")
+}
+
+// ─────────────────────────────────────────────
+// Categories — reportable-matters taxonomy
+// ─────────────────────────────────────────────
+
+model Category {
+  id        String    @id @default(cuid())
+  key       String    @unique
+  labelEn   String
+  labelId   String
+  isActive  Boolean   @default(true)
+  sortOrder Int       @default(0)
+
+  reports   Report[]
+
+  @@map("categories")
+}
+
+// ─────────────────────────────────────────────
+// Audit logs — append-only, immutable record
+// Never stores reporter identity for anonymous reports.
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id               String    @id @default(cuid())
+  // null for system actions or where reviewer is not known
+  actorReviewerId  String?
+  actor            Reviewer? @relation(fields: [actorReviewerId], references: [id])
+  action           String    // e.g. "report.viewed", "status.changed", "recusal.applied"
+  reportId         String?
+  report           Report?   @relation(fields: [reportId], references: [id])
+  metadataJson     Json?
+  createdAt        DateTime  @default(now())
+
+  @@map("audit_logs")
+}

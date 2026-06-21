@@ -1,0 +1,155 @@
+{
+  "common": {
+    "appName": "Speak Up",
+    "loading": "Loading…",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "save": "Save",
+    "yes": "Yes",
+    "no": "No",
+    "anonymous": "Anonymous",
+    "named": "Named (with consent)"
+  },
+  "locale": {
+    "switch": "Bahasa Indonesia",
+    "current": "English"
+  },
+  "reporter": {
+    "headline": "Report a concern",
+    "subheadline": "Your report goes directly to the Board of Commissioners, independent of management.",
+    "modeLabel": "How do you want to submit?",
+    "anonymousHint": "Your identity will never be recorded. You'll receive a private code to follow up.",
+    "namedHint": "You consent to your identity being shared with the Board for this case.",
+    "consentLabel": "I consent to sharing my name and contact details with the Board of Commissioners for the purposes of investigating this report.",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category",
+    "descriptionLabel": "What happened?",
+    "descriptionPlaceholder": "Describe the incident in as much detail as you can. Do not include your own name or personal details if you want to remain anonymous.",
+    "subjectLabel": "Who or what department is involved? (optional)",
+    "dateLabel": "Approximate date / period (optional)",
+    "locationLabel": "Location (optional)",
+    "attachmentsLabel": "Attachments (optional)",
+    "attachmentsHint": "Photos, documents, or other evidence. Maximum 10 MB per file. Metadata is automatically removed.",
+    "hrNote": "Note: For ordinary HR or workplace grievances, please use the standard HR channel. This platform is for serious misconduct, fraud, and safety concerns.",
+    "commissionerFlag": "Does this report concern a member of the Board of Commissioners?",
+    "commissionerName": "Name of the commissioner (optional)",
+    "submitButton": "Submit report",
+    "submitting": "Submitting…"
+  },
+  "accessCode": {
+    "title": "Your private access code",
+    "instruction": "Write this down and keep it safe. You will need it to follow up on your report. It will not be shown again.",
+    "referenceLabel": "Your report reference:",
+    "codeCopied": "Copied!",
+    "copy": "Copy code",
+    "continueButton": "I have saved my code",
+    "followUpButton": "Follow up on a report",
+    "followUpTitle": "Check your report",
+    "followUpInstruction": "Enter your private access code to view your report status and messages.",
+    "codePlaceholder": "Enter your access code",
+    "checkButton": "View report",
+    "checking": "Checking…",
+    "invalidCode": "Invalid code. Please check and try again.",
+    "codeExpired": "This code has been used too many times or has expired."
+  },
+  "status": {
+    "new": "New",
+    "acknowledged": "Acknowledged",
+    "under_review": "Under Review",
+    "action_taken": "Action Taken",
+    "closed": "Closed",
+    "escalated": "Escalated"
+  },
+  "thread": {
+    "title": "Your report",
+    "statusLabel": "Status",
+    "yourMessage": "Send a message",
+    "messagePlaceholder": "Add more detail or answer a question from the reviewer…",
+    "sendButton": "Send",
+    "sending": "Sending…",
+    "reviewerLabel": "Reviewer",
+    "reporterLabel": "You",
+    "noMessages": "No messages yet. The reviewer may ask you follow-up questions here."
+  },
+  "dashboard": {
+    "title": "Cases",
+    "newCase": "New case",
+    "filters": {
+      "all": "All",
+      "open": "Open",
+      "mine": "Assigned to me"
+    },
+    "columns": {
+      "reference": "Reference",
+      "category": "Category",
+      "status": "Status",
+      "created": "Submitted",
+      "sla": "SLA"
+    },
+    "sla": {
+      "acknowledgeDue": "Acknowledge by",
+      "feedbackDue": "Feedback due",
+      "overdue": "Overdue"
+    },
+    "noCase": "No cases match your filters."
+  },
+  "case": {
+    "title": "Case",
+    "body": "Report details",
+    "attachments": "Attachments",
+    "internalNotes": "Internal notes",
+    "addNote": "Add note",
+    "noteplaceholder": "Internal notes are only visible to reviewers.",
+    "thread": "Reporter messages",
+    "assignee": "Assignee",
+    "recuse": "Recuse myself",
+    "recuseReason": "Reason for recusal (optional)",
+    "recuseConfirm": "Confirm — you will no longer see this case.",
+    "escalate": "Escalate to external party",
+    "escalateReason": "Reason for escalation",
+    "statusChange": "Change status"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "emailLabel": "Email address",
+    "passwordLabel": "Password",
+    "totpLabel": "Authenticator code",
+    "totpHint": "Enter the 6-digit code from your authenticator app.",
+    "signInButton": "Sign in",
+    "signingIn": "Signing in…",
+    "error": "Invalid credentials or 2FA code.",
+    "setupTotp": "Set up two-factor authentication",
+    "setupTotpInstruction": "Scan this QR code with your authenticator app, then enter the 6-digit code to confirm.",
+    "verifyCode": "Verify code",
+    "totpSetupSuccess": "Two-factor authentication is now active."
+  },
+  "admin": {
+    "title": "Administration",
+    "users": "Users",
+    "inviteUser": "Invite user",
+    "emailLabel": "Email address",
+    "nameLabel": "Display name",
+    "roleLabel": "Role",
+    "roles": {
+      "commissioner": "Commissioner (Board member)",
+      "admin": "Administrator",
+      "external": "External escalation party"
+    },
+    "sendInvite": "Send invite",
+    "disable": "Disable account",
+    "categories": "Categories",
+    "slaSettings": "SLA settings",
+    "quorumSettings": "Quorum settings"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "forbidden": "You don't have permission to view this.",
+    "notFound": "Not found.",
+    "tooManyRequests": "Too many attempts. Please wait before trying again.",
+    "fileTooLarge": "File is too large (maximum 10 MB).",
+    "fileTypeNotAllowed": "File type is not allowed."
+  }
+}

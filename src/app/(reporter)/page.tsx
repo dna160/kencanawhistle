@@ -14,7 +14,6 @@ async function fetchCategories(): Promise<Category[]> {
 }
 
 export default function ReportPage() {
-  // ALL hooks must be called unconditionally at the top
   const t = useTranslations("reporter");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -23,6 +22,7 @@ export default function ReportPage() {
   const [mode, setMode] = useState<"anonymous" | "named">("anonymous");
   const [categories, setCategories] = useState<Category[]>([]);
   const [catLoaded, setCatLoaded] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<{
@@ -122,6 +122,7 @@ export default function ReportPage() {
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+
         {/* Mode toggle */}
         <fieldset>
           <legend className="text-sm font-semibold text-gray-700 mb-3">{t("modeLabel")}</legend>
@@ -193,6 +194,8 @@ export default function ReportPage() {
             id="category"
             name="categoryKey"
             required
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             onFocus={ensureCatsLoaded}
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base bg-white"
           >
@@ -201,6 +204,22 @@ export default function ReportPage() {
               <option key={c.key} value={c.key}>{c.labelEn}</option>
             ))}
           </select>
+
+          {/* "Other" — reveal custom description field */}
+          {selectedCategory === "other" && (
+            <div className="mt-3">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Please specify *
+              </label>
+              <input
+                type="text"
+                name="categoryOther"
+                required
+                placeholder="Describe the type of concern…"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
+              />
+            </div>
+          )}
         </div>
 
         {/* Description */}
@@ -219,31 +238,33 @@ export default function ReportPage() {
           />
         </div>
 
-        {/* Optional fields */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("subjectLabel")}
-            </label>
-            <input
-              type="text"
-              name="subject"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("dateLabel")}
-            </label>
-            <input
-              type="text"
-              name="incidentDate"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
-              placeholder="e.g. March 2025"
-            />
-          </div>
+        {/* Department / subject — full width to avoid alignment issues */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t("subjectLabel")}
+          </label>
+          <input
+            type="text"
+            name="subject"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
+            placeholder="e.g. Finance department, Warehouse 3"
+          />
         </div>
 
+        {/* Date — own row, no longer misaligned next to the long department label */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t("dateLabel")}
+          </label>
+          <input
+            type="text"
+            name="incidentDate"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
+            placeholder="e.g. March 2025, last week, around mid-April"
+          />
+        </div>
+
+        {/* Location */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             {t("locationLabel")}
@@ -252,6 +273,7 @@ export default function ReportPage() {
             type="text"
             name="location"
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
+            placeholder="e.g. Factory floor B, Head office"
           />
         </div>
 

@@ -24,6 +24,7 @@ export const dynamic = "force-dynamic";
 const SubmitSchema = z.object({
   mode: z.enum(["anonymous", "named"]),
   categoryKey: z.string().min(1),
+  categoryOther: z.string().max(300).optional(), // filled when categoryKey === "other"
   description: z.string().min(20).max(10000),
   subject: z.string().max(200).optional(),
   incidentDate: z.string().max(100).optional(),
@@ -124,6 +125,8 @@ export async function POST(req: NextRequest) {
     subject: data.subject ?? null,
     incidentDate: data.incidentDate ?? null,
     location: data.location ?? null,
+    // When "Other" is selected, store the reporter's own description of the category
+    categoryOther: data.categoryKey === "other" ? (data.categoryOther ?? null) : null,
   });
 
   // Encrypt sensitive fields

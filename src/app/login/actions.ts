@@ -3,32 +3,38 @@
 import { signIn } from "@/lib/auth/config";
 import { AuthError } from "next-auth";
 
-export async function loginAction(data: {
-  email: string;
-  password: string;
-  totpCode: string;
-}): Promise<{ error: string } | undefined> {
+/**
+ * Server Action for login — used as a form action via useActionState.
+ * Returns an error string on failure, or redirects (throws NEXT_REDIRECT) on success.
+ */
+export async function loginAction(
+  _prevState: string | null,
+  formData: FormData
+): Promise<string | null> {
+  const email = (formData.get("email") as string)?.trim();
+  const password = formData.get("password") as string;
+  const totpCode = (formData.get("totpCode") as string) || "";
+
   try {
     await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      totpCode: data.totpCode || "",
+      email,
+      password,
+      totpCode,
       redirectTo: "/dashboard",
     });
-    // signIn with redirectTo throws a NEXT_REDIRECT on success —
-    // if we get here, it somehow didn't redirect (shouldn't happen)
-    return undefined;
+    // signIn with redirectTo always throws NEXT_REDIRECT on success;
+    // if we somehow reach here, return null (no error)
+    return null;
   } catch (error) {
-    // Re-throw Next.js redirect (this is how next-auth v5 signals success)
-    if ((error as { digest?: string })?.digest?.startsWith("NEXT_REDIRECT")) {
-      throw error;
-    }
-    // Auth errors (wrong credentials, TOTP fail, etc.)
+    // NEXT_REDIRECT must be re-thrown so Next.js can send the 303 to the browser
+    const digest = (error as { digest?: string })?.digest ?? "";
+    if (digest.startsWith("NEXT_REDIRECT")) throw error;
+
     if (error instanceof AuthError) {
-      return { error: "Invalid credentials or 2FA code. Please check and try again." };
+      return "Invalid credentials or 2FA code. Please try again.";
     }
-    // Unexpected
+
     console.error("[login] unexpected error:", error);
-    return { error: "Something went wrong. Please try again." };
+    return "Something went wrong. Please try again.";
   }
 }

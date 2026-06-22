@@ -1,29 +1,14 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useActionState } from "react";
 import { loginAction } from "./actions";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [totpCode, setTotpCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    // Do NOT wrap in try-catch — loginAction throws NEXT_REDIRECT on success
-    // which Next.js router must receive unmodified to navigate correctly.
-    const result = await loginAction({ email, password, totpCode });
-    // Only reach here on failure (success throws NEXT_REDIRECT)
-    if (result?.error) {
-      setError(result.error);
-    }
-    setLoading(false);
-  };
+  // useActionState wires the Server Action directly as the form's action —
+  // this is the correct Next.js 15 / next-auth v5 pattern for redirecting
+  // Server Actions: the redirect response is handled at the framework level,
+  // not intercepted by JS event handlers.
+  const [error, formAction, pending] = useActionState(loginAction, null);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center px-4">
@@ -37,15 +22,14 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-8 space-y-5">
+        <form action={formAction} className="bg-white rounded-2xl shadow-sm border p-8 space-y-5">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Email address
             </label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
               required
               autoComplete="email"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
@@ -58,8 +42,7 @@ export default function LoginPage() {
             </label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
               required
               autoComplete="current-password"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base"
@@ -75,11 +58,9 @@ export default function LoginPage() {
             </label>
             <input
               type="text"
+              name="totpCode"
               inputMode="numeric"
-              pattern="[0-9]{6}"
               maxLength={6}
-              value={totpCode}
-              onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ""))}
               autoComplete="one-time-code"
               placeholder="000000 (optional on first login)"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base font-mono tracking-widest text-center text-xl"
@@ -97,10 +78,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={pending}
             className="w-full bg-brand-600 text-white rounded-xl py-4 font-semibold text-base hover:bg-brand-700 disabled:opacity-60 transition-colors"
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {pending ? "Signing in…" : "Sign in"}
           </button>
         </form>
 

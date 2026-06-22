@@ -35,10 +35,19 @@ export async function middleware(req: NextRequest) {
 
   if (isPublic(pathname)) return NextResponse.next();
 
-  // Verify JWT session (Edge-safe — no argon2, no node:crypto)
+  // next-auth v5 renamed its session cookie from "next-auth.session-token"
+  // to "authjs.session-token" (with "__Secure-" prefix on HTTPS).
+  // getToken() defaults to the old v4 name, so we must pass the v5 name explicitly.
+  const useSecureCookies = process.env.AUTH_URL?.startsWith("https://") ?? process.env.NODE_ENV === "production";
+  const cookieName = useSecureCookies
+    ? "__Secure-authjs.session-token"
+    : "authjs.session-token";
+
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
+    cookieName,
+    salt: cookieName,
   });
 
   if (!token) {

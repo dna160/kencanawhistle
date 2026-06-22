@@ -17,44 +17,30 @@ import type { ReviewerRole } from "@prisma/client";
 const credSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  // TOTP is optional on first login (not yet enrolled); required once enrolled
-  totpCode: z.string().optional().default(""),
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      name: "Email + TOTP",
+      name: "Email & Password",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
-        totpCode: { label: "2FA Code", type: "text" },
       },
       async authorize(credentials) {
         const parsed = credSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const { email, password, totpCode } = parsed.data;
+        const { email, password } = parsed.data;
 
         const reviewer = await db.reviewer.findUnique({ where: { email } });
         if (!reviewer || !reviewer.isActive) return null;
 
-        // Password check
         const passwordHash = reviewer.passwordHash;
         if (!passwordHash) return null;
 
         const passwordOk = await argon2.verify(passwordHash, password);
         if (!passwordOk) return null;
-
-        // TOTP check
-        // If TOTP not yet enrolled: allow login so user can set it up on first access.
-        // If TOTP enrolled: code is mandatory.
-        if (reviewer.totpVerified && reviewer.totpSecretEnc) {
-          if (!totpCode) return null; // enrolled but no code provided
-          const { verifyTOTP } = await import("@/lib/auth/totp");
-          const totpOk = await verifyTOTP(reviewer.totpSecretEnc, totpCode);
-          if (!totpOk) return null;
-        }
 
         return {
           id: reviewer.id,

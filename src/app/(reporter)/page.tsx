@@ -120,7 +120,20 @@ export default function ReportPage() {
         <LocaleSwitcher />
       </div>
 
-      <p className="text-gray-600 mb-8 text-sm leading-relaxed">{t("subheadline")}</p>
+      <p className="text-gray-600 mb-6 text-sm leading-relaxed">{t("subheadline")}</p>
+
+      {/* Follow-up shortcut */}
+      <a
+        href="/follow-up"
+        className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700 hover:bg-blue-100 transition-colors"
+      >
+        <span className="text-lg">🔍</span>
+        <div>
+          <div className="font-semibold">Already submitted a report?</div>
+          <div className="text-xs text-blue-500 mt-0.5">Enter your access code to check status or send a message</div>
+        </div>
+        <span className="ml-auto text-blue-400">→</span>
+      </a>
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 text-sm text-amber-800">
         {t("hrNote")}

@@ -1,6 +1,6 @@
 /**
- * Smart redirect: sends each role to the right landing page.
- * Admin → /admin, Commissioner/External → /cases
+ * Post-login redirect — all roles go to /cases.
+ * Admin can view cases for oversight/demo; /admin is accessible via nav.
  */
 import { auth } from "@/lib/auth/config";
 import { redirect } from "next/navigation";
@@ -8,9 +8,5 @@ import { redirect } from "next/navigation";
 export default async function DashboardRootPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
-
-  if (session.user.role === "admin") {
-    redirect("/admin");
-  }
   redirect("/cases");
 }

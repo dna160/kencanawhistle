@@ -51,11 +51,12 @@ export async function requireRole(
 }
 
 /**
- * Require case-access permission (commissioner or external).
- * Admin is explicitly denied.
+ * Require case-access permission.
+ * Commissioner, external, and admin (for oversight/demo) can read cases.
+ * Fine-grained action guards are applied per operation where needed.
  */
 export async function requireCaseAccess(): Promise<AuthenticatedReviewer> {
-  return requireRole("commissioner", "external");
+  return requireRole("commissioner", "external", "admin");
 }
 
 export class ForbiddenError extends Error {

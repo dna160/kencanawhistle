@@ -15,21 +15,14 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
-    try {
-      const result = await loginAction({ email, password, totpCode });
-      // If result has error, show it
-      if (result?.error) {
-        setError(result.error);
-      }
-      // On success, loginAction throws NEXT_REDIRECT which Next.js handles —
-      // the browser navigates to /dashboard automatically
-    } catch {
-      // NEXT_REDIRECT propagates as a thrown error in Server Actions —
-      // do NOT catch it here; re-throw so Next.js handles the navigation
-      throw new Error("redirect");
-    } finally {
-      setLoading(false);
+    // Do NOT wrap in try-catch — loginAction throws NEXT_REDIRECT on success
+    // which Next.js router must receive unmodified to navigate correctly.
+    const result = await loginAction({ email, password, totpCode });
+    // Only reach here on failure (success throws NEXT_REDIRECT)
+    if (result?.error) {
+      setError(result.error);
     }
+    setLoading(false);
   };
 
   return (

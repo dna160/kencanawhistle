@@ -129,8 +129,8 @@ export default function ReportPage() {
       >
         <span className="text-lg">🔍</span>
         <div>
-          <div className="font-semibold">Already submitted a report?</div>
-          <div className="text-xs text-blue-500 mt-0.5">Enter your access code to check status or send a message</div>
+          <div className="font-semibold">{tac("alreadySubmittedTitle")}</div>
+          <div className="text-xs text-blue-500 mt-0.5">{tac("alreadySubmittedHint")}</div>
         </div>
         <span className="ml-auto text-blue-400">→</span>
       </a>

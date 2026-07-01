@@ -33,11 +33,11 @@
   },
   "reporter": {
     "headline": "Report a concern",
-    "subheadline": "Your report goes directly to the Board of Commissioners, independent of management.",
+    "subheadline": "Your report goes directly to the Board of Directors, independent of management.",
     "modeLabel": "How do you want to submit?",
     "anonymousHint": "Your identity will never be recorded. You'll receive a private code to follow up.",
     "namedHint": "You consent to your identity being shared with the Board for this case.",
-    "consentLabel": "I consent to sharing my name and contact details with the Board of Commissioners for the purposes of investigating this report.",
+    "consentLabel": "I consent to sharing my name and contact details with the Board of Directors for the purposes of investigating this report.",
     "categoryLabel": "Category",
     "categoryPlaceholder": "Select a category",
     "categoryOtherLabel": "Please specify",
@@ -50,8 +50,8 @@
     "attachmentsLabel": "Attachments (optional)",
     "attachmentsHint": "Photos, documents, or other evidence. Maximum 10 MB per file. Metadata is automatically removed.",
     "hrNote": "Note: For ordinary HR or workplace grievances, please use the standard HR channel. This platform is for serious misconduct, fraud, and safety concerns.",
-    "commissionerFlag": "Does this report concern a member of the Board of Commissioners?",
-    "commissionerName": "Name of the commissioner (optional)",
+    "commissionerFlag": "Does this report concern a member of the Board of Directors?",
+    "commissionerName": "Name of the director (optional)",
     "submitButton": "Submit report",
     "submitting": "Submitting…"
   },
@@ -152,7 +152,7 @@
     "nameLabel": "Display name",
     "roleLabel": "Role",
     "roles": {
-      "commissioner": "Commissioner (Board member)",
+      "commissioner": "Direktur (Anggota Dewan)",
       "admin": "Administrator",
       "external": "External escalation party"
     },

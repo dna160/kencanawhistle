@@ -47,7 +47,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="text-4xl mb-4">🔒</div>
           <h1 className="text-2xl font-bold text-gray-900">Reviewer Sign In</h1>
-          <p className="text-sm text-gray-500 mt-1">Board of Commissioners access</p>
+          <p className="text-sm text-gray-500 mt-1">Board of Directors access</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-8 space-y-5">

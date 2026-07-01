@@ -4,7 +4,7 @@ import { InviteForm } from "./InviteForm";
 import type { ReviewerRole } from "@prisma/client";
 
 const ROLE_LABELS: Record<ReviewerRole, string> = {
-  commissioner: "Commissioner (Board member)",
+  commissioner: "Direktur (Anggota Dewan)",
   admin: "Administrator",
   external: "External escalation party",
 };

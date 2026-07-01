@@ -112,7 +112,7 @@ export default async function CaseDetailPage({
       {/* Commissioner flag */}
       {report.subjectIsCommissioner && (
         <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 text-sm text-orange-800">
-          ⚠ This report concerns a member of the Board of Commissioners.
+          ⚠ This report concerns a member of the Board of Directors.
           {report.recusals.length > 0 && (
             <span className="block mt-1 text-xs">
               Recused: {report.recusals.map((r) => r.reviewer.displayName).join(", ")}

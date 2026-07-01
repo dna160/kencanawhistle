@@ -33,11 +33,11 @@
   },
   "reporter": {
     "headline": "Laporkan kekhawatiran Anda",
-    "subheadline": "Laporan Anda langsung diterima oleh Dewan Komisaris, terlepas dari manajemen.",
+    "subheadline": "Laporan Anda langsung diterima oleh Dewan Direksi, terlepas dari manajemen.",
     "modeLabel": "Bagaimana Anda ingin mengirim?",
     "anonymousHint": "Identitas Anda tidak akan pernah dicatat. Anda akan menerima kode privat untuk menindaklanjuti.",
     "namedHint": "Anda menyetujui identitas Anda dibagikan kepada Dewan untuk kasus ini.",
-    "consentLabel": "Saya menyetujui berbagi nama dan informasi kontak saya dengan Dewan Komisaris untuk keperluan penyelidikan laporan ini.",
+    "consentLabel": "Saya menyetujui berbagi nama dan informasi kontak saya dengan Dewan Direksi untuk keperluan penyelidikan laporan ini.",
     "categoryLabel": "Kategori",
     "categoryPlaceholder": "Pilih kategori",
     "categoryOtherLabel": "Harap sebutkan",
@@ -50,8 +50,8 @@
     "attachmentsLabel": "Lampiran (opsional)",
     "attachmentsHint": "Foto, dokumen, atau bukti lainnya. Maksimal 10 MB per file. Metadata dihapus secara otomatis.",
     "hrNote": "Catatan: Untuk keluhan HR atau tempat kerja biasa, gunakan saluran HR standar. Platform ini untuk pelanggaran serius, penipuan, dan masalah keselamatan.",
-    "commissionerFlag": "Apakah laporan ini menyangkut anggota Dewan Komisaris?",
-    "commissionerName": "Nama komisaris (opsional)",
+    "commissionerFlag": "Apakah laporan ini menyangkut anggota Dewan Direksi?",
+    "commissionerName": "Nama direktur (opsional)",
     "submitButton": "Kirim laporan",
     "submitting": "Mengirim…"
   },
@@ -152,7 +152,7 @@
     "nameLabel": "Nama tampilan",
     "roleLabel": "Peran",
     "roles": {
-      "commissioner": "Komisaris (Anggota Dewan)",
+      "commissioner": "Direktur (Anggota Dewan)",
       "admin": "Administrator",
       "external": "Pihak eskalasi eksternal"
     },

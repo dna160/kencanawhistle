@@ -65,7 +65,7 @@ export function InviteForm() {
           onChange={(e) => setRole(e.target.value as typeof role)}
           className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm bg-white"
         >
-          <option value="commissioner">Commissioner</option>
+          <option value="commissioner">Direktur</option>
           <option value="admin">Administrator</option>
           <option value="external">External party</option>
         </select>
